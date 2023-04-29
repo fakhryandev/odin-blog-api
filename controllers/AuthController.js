@@ -12,11 +12,16 @@ exports.signUp = async (req, res) => {
   try {
     const { name, email, password, confirmPassword } = req.body;
 
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name.trim() || !email.trim() || !password || !confirmPassword) {
       return res.status(400).json({
         message: "Please fill name, email, password, confirmPassword",
       });
     }
+
+    const existUser = await User.findOne({ email });
+
+    if (existUser)
+      return res.status(400).json({ message: "Email already register" });
 
     if (password !== confirmPassword) {
       return res.status(400).json({

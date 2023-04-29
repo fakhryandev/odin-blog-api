@@ -4,6 +4,9 @@ const User = require("../models/User");
 const authenticationMiddleware = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
+    if (!authorization) {
+      throw new Error("Unauthorized");
+    }
     if (authorization && authorization.startsWith("Bearer")) {
       const token = authorization.split(" ")[1];
 

@@ -7,5 +7,10 @@ router.get("/", postController.getPosts);
 router.get("/:id", postController.getPostById);
 router.post("/create", authenticationMiddleware, postController.createPost);
 router.put("/:id/update", authenticationMiddleware, postController.updatePost);
+router.put(
+  "/:id/publish",
+  authenticationMiddleware,
+  postController.publishPost
+);
 
 module.exports = router;

@@ -30,7 +30,7 @@ exports.getPosts = async (req, res) => {
         select: "name email",
       })
       .populate("comments")
-      .select("title author content updatedAt date_formatted");
+      .select("title author content updatedAt date_formatted isPublished");
 
     res.status(200).json(posts);
   } catch (error) {
@@ -54,7 +54,9 @@ exports.getPostById = async (req, res) => {
           select: "email",
         },
       })
-      .select("title author content updatedAt date_formatted comments");
+      .select(
+        "title author content updatedAt date_formatted comments isPublished"
+      );
 
     if (!post) {
       return res.status(404).json({ message: "Data not found" });
@@ -91,6 +93,31 @@ exports.updatePost = async (req, res) => {
     await Post.findByIdAndUpdate(id, updatedPost);
 
     res.status(200).json({ message: "Success update post" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.publishPost = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = req.user;
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+
+    if (user._id.toString() !== post.author.toString()) {
+      return res.status(400).json({ message: "You can't update this post" });
+    }
+
+    post.isPublished = !post.isPublished;
+
+    await post.save();
+
+    res.status(200).json({ message: "Succes update post" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

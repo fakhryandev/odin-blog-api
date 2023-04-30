@@ -15,11 +15,13 @@ mongoose.connect(MONGO_URI, {
 
 const authRouter = require("./routes/auth");
 const postRouter = require("./routes/post");
+const commentRouter = require("./routes/comment");
 
 app.use(express.json());
 app.use(cors());
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
+app.use("/post", commentRouter);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

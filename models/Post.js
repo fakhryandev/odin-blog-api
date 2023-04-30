@@ -17,6 +17,12 @@ const PostSchema = new Schema(
       type: String,
       required: true,
     },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -30,7 +36,7 @@ const PostSchema = new Schema(
 );
 
 PostSchema.virtual("date_formatted").get(function () {
-  return DateTime.fromJSDate(this.updatedAt).toLocaleString(DateTime.DATE_MED);
+  return DateTime.fromJSDate(this.createdAt).toLocaleString(DateTime.DATE_MED);
 });
 
 PostSchema.virtual("url").get(function () {

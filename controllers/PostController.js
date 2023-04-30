@@ -22,6 +22,22 @@ exports.createPost = async (req, res) => {
   }
 };
 
+exports.getPublishedPost = async (req, res) => {
+  try {
+    const posts = await Post.find({ isPublished: true })
+      .populate({
+        path: "author",
+        select: "name email",
+      })
+      .populate("comments")
+      .select("title author content updatedAt date_formatted isPublished");
+
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).status({ message: error.message });
+  }
+};
+
 exports.getPosts = async (req, res) => {
   try {
     const posts = await Post.find()

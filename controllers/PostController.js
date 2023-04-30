@@ -37,3 +37,14 @@ exports.getPosts = async (req, res) => {
     res.status(500).status({ message: error.message });
   }
 };
+
+exports.getPostById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const post = await Post.findById(id);
+
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};

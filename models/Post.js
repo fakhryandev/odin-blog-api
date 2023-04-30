@@ -33,4 +33,8 @@ PostSchema.virtual("date_formatted").get(function () {
   return DateTime.fromJSDate(this.updatedAt).toLocaleString(DateTime.DATE_MED);
 });
 
+PostSchema.virtual("url").get(function () {
+  return `/post/${this._id}`;
+});
+
 module.exports = mongoose.model("Post", PostSchema);

@@ -29,7 +29,8 @@ exports.getPosts = async (req, res) => {
         path: "author",
         select: "name email",
       })
-      .select("title author content updatedAt date_formatted comments");
+      .populate("comments")
+      .select("title author content updatedAt date_formatted");
 
     res.status(200).json(posts);
   } catch (error) {
@@ -40,10 +41,20 @@ exports.getPosts = async (req, res) => {
 exports.getPostById = async (req, res) => {
   try {
     const id = req.params.id;
-    const post = await Post.findById(id).populate({
-      path: "author",
-      select: "name email",
-    });
+    const post = await Post.findById(id)
+      .populate({
+        path: "author",
+        select: "name email",
+      })
+      .populate({
+        path: "comments",
+        select: "user comment createdAt date_formatted",
+        populate: {
+          path: "user",
+          select: "email",
+        },
+      })
+      .select("title author content updatedAt date_formatted comments");
 
     if (!post) {
       return res.status(404).json({ message: "Data not found" });
